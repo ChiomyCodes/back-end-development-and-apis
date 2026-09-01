@@ -11,7 +11,64 @@ app.get("/", (_req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
+
 // Do not change code above this line
+app.get("/api", (req, res) => {
+  const date = new Date();
+
+  res.json({
+    unix: date.getTime(),
+    utc: date.toUTCString()
+  });
+});
+app.get("/api/:date", (req, res) => {
+  const { date } = req.params;
+
+  let parsedDate;
+
+  if (/^\d+$/.test(date)) {
+    // Unix timestamp
+    parsedDate = new Date(Number(date));
+  } else {
+    // Date string
+    parsedDate = new Date(date);
+  }
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return res.json({
+      error: "Invalid Date"
+    });
+  }
+
+  res.json({
+    unix: parsedDate.getTime(),
+    utc: parsedDate.toUTCString()
+  });
+});
+
+// app.get("/api/:date", (req, res) => {
+  
+// const  {date}  = req.params;
+
+ 
+
+//   // const parsedDate = new Date(date);
+//     const parsedDate = new Date(Number(date));
+  
+
+
+
+//   if (Number.isNaN(parsedDate.getTime())) {
+//     return res.json({
+//       error: "Invalid Date"
+//     });
+//   }
+
+//   res.json({
+//     unix: parsedDate.getTime(),
+//     utc: parsedDate.toUTCString()
+//   });
+// });
 
 // Do not change code below this line
 

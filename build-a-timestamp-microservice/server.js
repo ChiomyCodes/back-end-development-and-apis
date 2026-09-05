@@ -46,31 +46,7 @@ app.get("/api/:date", (req, res) => {
   });
 });
 
-// app.get("/api/:date", (req, res) => {
-  
-// const  {date}  = req.params;
 
- 
-
-//   // const parsedDate = new Date(date);
-//     const parsedDate = new Date(Number(date));
-  
-
-
-
-//   if (Number.isNaN(parsedDate.getTime())) {
-//     return res.json({
-//       error: "Invalid Date"
-//     });
-//   }
-
-//   res.json({
-//     unix: parsedDate.getTime(),
-//     utc: parsedDate.toUTCString()
-//   });
-// });
-
-// Do not change code below this line
 
 const PORT = 8000;
 const listener = app.listen(PORT, function () {

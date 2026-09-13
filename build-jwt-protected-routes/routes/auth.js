@@ -110,6 +110,10 @@ router.post("/login", async (req, res) => {
 
 // PROFILE
 router.get("/profile", authenticate, (req, res) => {
+  res.status(200).json({
+    user: req.user,
+  });
+
 });
 
 // LOGOUT

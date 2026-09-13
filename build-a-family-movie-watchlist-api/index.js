@@ -1,7 +1,10 @@
+import dotenv from "dotenv";
+dotenv.config()
 import express from "express";
 import helmet from "helmet";
 
-import watchlistRoutes from "./routes/watchlist";
+import watchlistRoutes from "./routes/watchlist.js";
+import router from "./routes/auth.js"
 
 const PORT = process.env.PORT;
 const app = express();
@@ -13,6 +16,7 @@ app.get("/", (req, res) => {
   res.send("Family Movie Watchlist API");
 });
 
+app.use("/api/auth", router);
 app.use("/api/watchlist", watchlistRoutes);
 
 app.listen(PORT, () => {

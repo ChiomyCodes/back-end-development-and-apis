@@ -20,7 +20,7 @@ export function findByUsername(username) {
 }
 
 export function findById(id) {
-  return users.find((u) => u.id === id) || null;
+  return users.find((u) => String(u.id) === String(id)) || null;
 }
 
 export function getWatchlist(userId) {
@@ -32,15 +32,20 @@ export function getWatchlist(userId) {
 
   return watchlists[userId] || [];
 }
-
 export function addMovie(userId, movieData) {
-  if (!findById(userId)) {
+  const user = findById(userId);
+
+  if (!user) {
     return null;
   }
 
   const watchlists = readWatchlists();
-  const list = watchlists[userId] || [];
-  const newId = list.length > 0 ? Math.max(...list.map((m) => m.id)) + 1 : 1;
+  const list = watchlists[String(user.id)] || [];
+
+  const newId =
+    list.length > 0
+      ? Math.max(...list.map((movie) => Number(movie.id))) + 1
+      : 1;
 
   const movie = {
     id: newId,
@@ -50,11 +55,42 @@ export function addMovie(userId, movieData) {
   };
 
   list.push(movie);
-  watchlists[userId] = list;
+  watchlists[String(user.id)] = list;
+
   writeWatchlists(watchlists);
 
   return movie;
 }
+
+export function deleteMovie(userId, movieId) {
+  const user = findById(userId);
+
+  if (!user) {
+    return null;
+  }
+
+  const watchlists = readWatchlists();
+  const key = String(user.id);
+  const list = watchlists[key] || [];
+
+  const index = list.findIndex(
+    (movie) => Number(movie.id) === Number(movieId),
+  );
+
+  if (index === -1) {
+    return null;
+  }
+
+  list.splice(index, 1);
+  watchlists[key] = list;
+
+  writeWatchlists(watchlists);
+
+  return true;
+}
+
+
+
 
 export function updateMovie(userId, movieId, updates) {
   if (!findById(userId)) {
@@ -76,21 +112,4 @@ export function updateMovie(userId, movieId, updates) {
   return list[index];
 }
 
-export function deleteMovie(userId, movieId) {
-  if (!findById(userId)) {
-    return null;
-  }
-  const watchlists = readWatchlists();
-  const list = watchlists[userId] || [];
-  const index = list.findIndex((m) => m.id === movieId);
 
-  if (index === -1) {
-    return null;
-  }
-
-  list.splice(index, 1);
-  watchlists[userId] = list;
-  writeWatchlists(watchlists);
-
-  return true;
-}
